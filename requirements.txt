@@ -1,0 +1,5 @@
+streamlit==1.32.0
+SpeechRecognition==3.14.1
+vosk==0.3.45
+numpy==1.26.4
+pydub==0.25.1
