@@ -19,27 +19,33 @@ MODEL_DIR = "vosk_models"
 
 # Function to download and extract the Vosk model if not found
 def download_vosk_model(language):
+    # Create model directory path
     model_path = os.path.join(MODEL_DIR, f"vosk-model-small-{language.lower()}")
     
+    # If model directory doesn't exist, download the model
     if not os.path.exists(model_path):
         st.info(f"📥 Downloading {language} model, please wait...")
         os.makedirs(MODEL_DIR, exist_ok=True)
         
+        # Get model download URL
         url = VOSK_MODEL_URLS[language]
         response = requests.get(url, stream=True)
         
         if response.status_code == 200:
+            # Extract the ZIP file into the model directory
             with zipfile.ZipFile(io.BytesIO(response.content), "r") as zip_ref:
                 zip_ref.extractall(MODEL_DIR)
             st.success(f"✅ {language} model downloaded successfully!")
         else:
             st.error("❌ Model download failed. Check your internet connection.")
+            return "Error"
     
-    # Check if model exists before creating Model object
+    # Check if the model folder exists after extraction
     if not os.path.exists(model_path):
         st.error(f"❌ Model path {model_path} does not exist. Check the folder structure.")
         return "Error"
-
+    
+    # Return the model path
     return model_path
 
 # Function to transcribe uploaded audio
@@ -59,7 +65,8 @@ def transcribe_audio_file(audio_file, api, language):
         elif api == "Vosk":
             model_path = download_vosk_model(language)
             
-            if model_path == "Error":  # If model download failed
+            # If model download failed, return error
+            if model_path == "Error":
                 return "❌ Error loading model."
 
             model = Model(model_path)  # Create the Vosk model
@@ -103,7 +110,7 @@ def main():
     api = st.sidebar.selectbox("🛠️ Choose API", ["Google", "Vosk"], index=0)
     language = st.sidebar.selectbox("🌍 Select Language", ["English", "French", "Spanish"], index=0)
 
-    uploaded_file = st.file_uploader("📂 Upload an audio file", type=["wav"])
+    uploaded_file = st.file_uploader("📂 Upload an audio file", type=["wav", "mp3"])
 
     if uploaded_file is not None:
         st.audio(uploaded_file, format="audio/wav")
