@@ -4,4 +4,4 @@ vosk==0.3.45
 numpy==1.26.4
 pydub==0.25.1
 requests==2.32.2
-Sphinx==7.3.7
+whisper
