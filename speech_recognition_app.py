@@ -70,7 +70,7 @@ def transcribe_audio_file(audio_file, api, language):
             if model_path == "Error":
                 return "❌ Error loading model."
                 
-             model = Model(model_path)
+            model = Model(model_path)
             rec = KaldiRecognizer(model, 16000)
 
             wav_data = audio_text.get_wav_data()
