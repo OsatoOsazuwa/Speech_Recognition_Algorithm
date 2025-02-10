@@ -29,7 +29,7 @@ This is a speech recognition web app built using **Streamlit** and **Vosk/Google
   - Vosk (Offline Model, supports multiple languages)
 - **Audio Processing**: 
   - `pydub` for resampling audio to 16kHz if required
-  - `speech_recognition` library for handling microphone input and recognition
+
 
 ## Installation
 
