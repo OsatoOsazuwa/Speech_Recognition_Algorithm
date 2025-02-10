@@ -2,21 +2,47 @@ import streamlit as st
 import speech_recognition as sr
 import wave
 import json
-from vosk import Model, KaldiRecognizer
-import time
-from pydub import AudioSegment
+import os
+import requests
+import zipfile
 import io
+from pydub import AudioSegment
+from vosk import Model, KaldiRecognizer
 
-# Define paths to Vosk models
-VOSK_MODELS = {
-    "English": "vosk-model-small-en-us-0.15",
-    "French": "vosk-model-small-fr-0.22",
-    "Spanish": "vosk-model-small-es-0.42"
+# Vosk model download URLs (official sources)
+VOSK_MODEL_URLS = {
+    "English": "https://alphacephei.com/vosk/models/vosk-model-small-en-us-0.15.zip",
+    "French": "https://alphacephei.com/vosk/models/vosk-model-small-fr-0.22.zip",
+    "Spanish": "https://alphacephei.com/vosk/models/vosk-model-small-es-0.42.zip"
 }
 
+# Local storage path for models
+MODEL_DIR = "vosk_models"
+
+# Function to download and extract the Vosk model if not found
+def download_vosk_model(language):
+    model_path = os.path.join(MODEL_DIR, f"vosk-model-small-{language.lower()}")
+    
+    if not os.path.exists(model_path):
+        st.info(f"📥 Downloading {language} model, please wait...")
+        os.makedirs(MODEL_DIR, exist_ok=True)
+        
+        url = VOSK_MODEL_URLS[language]
+        response = requests.get(url, stream=True)
+        
+        if response.status_code == 200:
+            with zipfile.ZipFile(io.BytesIO(response.content), "r") as zip_ref:
+                zip_ref.extractall(MODEL_DIR)
+            st.success(f"✅ {language} model downloaded successfully!")
+        else:
+            st.error("❌ Model download failed. Check your internet connection.")
+    
+    return model_path
+
+# Function to transcribe uploaded audio
 def transcribe_audio_file(audio_file, api, language):
     recognizer = sr.Recognizer()
-
+    
     try:
         with sr.AudioFile(audio_file) as source:
             st.info("🔄 Processing uploaded file...")
@@ -28,7 +54,7 @@ def transcribe_audio_file(audio_file, api, language):
             return text.capitalize()
 
         elif api == "Vosk":
-            model_path = VOSK_MODELS[language]
+            model_path = download_vosk_model(language)
             model = Model(model_path)
             rec = KaldiRecognizer(model, 16000)
 
@@ -60,6 +86,7 @@ def transcribe_audio_file(audio_file, api, language):
     except Exception as e:
         return f"❌ Error: {str(e)}"
 
+# Streamlit UI
 def main():
     st.set_page_config(page_title="Speech Recognition App", layout="centered")
     st.title("🗣️ Speech Recognition App")
