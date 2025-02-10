@@ -67,7 +67,10 @@ def transcribe_audio_file(audio_file, api, language):
 
         elif api == "Vosk":
             model_path = download_vosk_model(language)
-            model = Model(model_path)
+            if model_path == "Error":
+                return "❌ Error loading model."
+                
+             model = Model(model_path)
             rec = KaldiRecognizer(model, 16000)
 
             wav_data = audio_text.get_wav_data()
