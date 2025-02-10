@@ -1,55 +1,29 @@
-import os
 import streamlit as st
-import wave
-import json
 import speech_recognition as sr
-import whisper
-from pydub import AudioSegment
 import io
+from pydub import AudioSegment
 
-# Initialize Whisper model
-def load_whisper_model():
-    try:
-        model = whisper.load_model("base")  # You can change the model size (e.g., "small", "medium", "large")
-        return model
-    except Exception as e:
-        st.error(f"❌ Failed to load Whisper model: {str(e)}")
-        return None
-
-# Function to transcribe audio using Whisper
-def transcribe_with_whisper(audio_file):
-    model = load_whisper_model()
-    if model is None:
-        return "❌ Could not load Whisper model."
-
-    # Convert audio file to the format Whisper expects (16kHz WAV)
-    audio = AudioSegment.from_file(audio_file)
-    audio = audio.set_frame_rate(16000).set_channels(1).set_sample_width(2)
-
-    # Save the audio to a temporary file
-    temp_file = "temp_audio.wav"
-    audio.export(temp_file, format="wav")
-
-    # Perform transcription with Whisper
-    result = model.transcribe(temp_file)
-    return result["text"].capitalize()
-
-# Function to transcribe audio using Google API
-def transcribe_with_google(audio_file):
+# Function to transcribe uploaded audio
+def transcribe_audio_file(audio_file, api, language):
     recognizer = sr.Recognizer()
-    
+
     try:
         with sr.AudioFile(audio_file) as source:
-            st.info("🔄 Processing uploaded file with Google...")  # Update for better clarity
+            st.info("🔄 Processing uploaded file...")
             audio_text = recognizer.record(source)
 
-        text = recognizer.recognize_google(audio_text)
-        return text.capitalize()
+        if api == "Google":
+            lang_code = {"English": "en-US", "French": "fr-FR", "Spanish": "es-ES"}[language]
+            text = recognizer.recognize_google(audio_text, language=lang_code)
+            return text.capitalize()
+
+        else:
+            return "❌ Selected API is not available."
 
     except sr.UnknownValueError:
         return "❌ Could not understand the audio."
     except sr.RequestError:
-        return "❌ Could not request results from Google, check your internet connection."
+        return "❌ Could not request results, check your internet connection."
     except Exception as e:
         return f"❌ Error: {str(e)}"
 
@@ -60,18 +34,14 @@ def main():
     st.write("🎙️ Upload an audio file to transcribe.")
 
     st.sidebar.header("⚙️ Settings")
-    api = st.sidebar.selectbox("🛠️ Choose API", ["Google", "Whisper"], index=0)
+    api = st.sidebar.selectbox("🛠️ Choose API", ["Google"], index=0)
+    language = st.sidebar.selectbox("🌍 Select Language", ["English", "French", "Spanish"], index=0)
 
     uploaded_file = st.file_uploader("📂 Upload an audio file", type=["wav", "mp3"])
 
     if uploaded_file is not None:
         st.audio(uploaded_file, format="audio/wav")
-
-        if api == "Whisper":
-            text = transcribe_with_whisper(uploaded_file)
-        elif api == "Google":
-            text = transcribe_with_google(uploaded_file)
-
+        text = transcribe_audio_file(uploaded_file, api, language)
         st.subheader("📝 Transcription:")
         st.write(text)
 
