@@ -19,11 +19,11 @@ VOSK_MODEL_URLS = {
 # Local storage path for models
 MODEL_DIR = "vosk_models"
 
-# Function to download and extract the Vosk model if not found
 def download_vosk_model(language):
-    model_path = os.path.join(MODEL_DIR, f"vosk-model-small-{language.lower()}")
-    
-    if not os.path.exists(model_path):
+    model_zip_path = os.path.join(MODEL_DIR, f"vosk-model-small-{language.lower()}.zip")
+    model_extract_path = os.path.join(MODEL_DIR, f"vosk-model-small-{language.lower()}")
+
+    if not os.path.exists(model_extract_path):
         st.info(f"📥 Downloading {language} model, please wait...")
         os.makedirs(MODEL_DIR, exist_ok=True)
         
@@ -31,13 +31,25 @@ def download_vosk_model(language):
         response = requests.get(url, stream=True)
         
         if response.status_code == 200:
-            with zipfile.ZipFile(io.BytesIO(response.content), "r") as zip_ref:
+            with open(model_zip_path, "wb") as f:
+                f.write(response.content)
+
+            with zipfile.ZipFile(model_zip_path, "r") as zip_ref:
+                # Extract into the parent directory
                 zip_ref.extractall(MODEL_DIR)
+
+            # Fix nested directory issue
+            extracted_folders = [f for f in os.listdir(MODEL_DIR) if f.startswith("vosk-model")]
+            if len(extracted_folders) == 1:
+                os.rename(os.path.join(MODEL_DIR, extracted_folders[0]), model_extract_path)
+            
+            os.remove(model_zip_path)  # Remove zip file after extraction
             st.success(f"✅ {language} model downloaded successfully!")
+
         else:
             st.error("❌ Model download failed. Check your internet connection.")
-    
-    return model_path
+
+    return model_extract_path
 
 # Function to transcribe uploaded audio
 def transcribe_audio_file(audio_file, api, language):
