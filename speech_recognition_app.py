@@ -69,7 +69,7 @@ def main():
     api = st.sidebar.selectbox("🛠️ Choose API", ["Google", "Vosk"], index=0)
     language = st.sidebar.selectbox("🌍 Select Language", ["English", "French", "Spanish"], index=0)
 
-    uploaded_file = st.file_uploader("📂 Upload an audio file", type=["wav", "mp3"])
+    uploaded_file = st.file_uploader("📂 Upload an audio file", type=["wav"])
 
     if uploaded_file is not None:
         st.audio(uploaded_file, format="audio/wav")
