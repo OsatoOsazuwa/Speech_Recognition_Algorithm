@@ -7,7 +7,6 @@ This is a speech recognition web app built using **Streamlit** and **Vosk/Google
 2. [Tech Stack](#tech-stack)
 3. [Installation](#installation)
     - [Prerequisites](#prerequisites)
-    - [Download Vosk Models](#download-vosk-models)
 4. [Usage](#usage)
 5. [Running the App](#running-the-app)
 6. [Future Improvements](#future-improvements)
@@ -26,7 +25,6 @@ This is a speech recognition web app built using **Streamlit** and **Vosk/Google
 - **Backend**: Python
 - **Speech Recognition APIs**: 
   - Google Speech-to-Text (requires internet)
-  - Vosk (Offline Model, supports multiple languages)
 - **Audio Processing**: 
   - `pydub` for resampling audio to 16kHz if required
 
@@ -39,18 +37,9 @@ Before running the app, you need to install the required libraries. You can inst
 ```bash
 pip install -r requirements.txt
 ```
-### Download Vosk Models
-Download the required Vosk models for English, French, or Spanish from the Vosk GitHub or directly from this link.
-
-- English: [vosk-model-small-en-us-0.15](https://alphacephei.com/vosk/models/vosk-model-small-en-us-0.15.zip)
-- French: [vosk-model-small-fr-0.22](https://alphacephei.com/vosk/models/vosk-model-small-fr-0.22.zip)
-- Spanish: [vosk-model-small-es-0.42](https://alphacephei.com/vosk/models/vosk-model-small-es-0.42.zip)
-  
-Once downloaded, extract the models and point the app to the model directory.
 
 ## Usage
 - Start Recording: Click the "🎤 Start Recording" button and start speaking.
-- Choose Recognition API: You can select between Google or Vosk.
 - Select Language: Choose from English, French, or Spanish.
 - Download Transcription: After the transcription is done, click the "📥 Download Transcription" button to download the text file.
 
