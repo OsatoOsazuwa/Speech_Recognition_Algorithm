@@ -43,11 +43,7 @@ pip install -r requirements.txt
 - Download Transcription: After the transcription is done, click the "📥 Download Transcription" button to download the text file.
 
 ## Running the App
-To run the app locally, use the following command:
-```bash
-streamlit speech_recognition_app.py
-```
-This will launch the app in your default web browser.
+Here's the app link: [streamlink app link](https://speechrecognitionapp.streamlit.app/)
 
 ## Future Improvements
 - 🌐 Add more languages for speech recognition.
@@ -56,7 +52,6 @@ This will launch the app in your default web browser.
 
 ## Troubleshooting
 - Audio Playback is Slow: Ensure your microphone is correctly set to record at 16kHz. If necessary, the app will resample the audio before transcription.
-- Error with API: Make sure you have internet access for Google API, and the Vosk models are correctly installed for offline transcription.
 
 ## Contributing
 Feel free to fork the repository and submit pull requests if you have improvements, fixes, or feature requests!
