@@ -1,6 +1,6 @@
 # 🗣️ Enhanced Speech Recognition App
 
-This is a speech recognition web app built using **Streamlit** and **Vosk/Google API** for real-time transcription. The app allows users to upload an audio file in .wav format and receive live transcription of their speech in multiple languages. It supports both **Google's Speech-to-Text API** and **Vosk**, an offline speech recognition model.
+This is a speech recognition web app built using **Streamlit** and **Google API** for real-time transcription. The app allows users to upload an audio file in .wav format and receive live transcription of their speech in multiple languages. It supports **Google's Speech-to-Text API** , an offline speech recognition model.
 
 ## Table of Contents
 1. [Features](#features)
@@ -16,7 +16,6 @@ This is a speech recognition web app built using **Streamlit** and **Vosk/Google
 ## Features
 - 🎙️ **Real-Time Speech Recognition**: Upload an audio file and get the transcription instantly.
 - 🌍 **Multi-Language Support**: Supports English, French, and Spanish for transcription.
-- 🛠️ **Choice of API**: Users can choose between **Google Speech-to-Text** and **Vosk** for transcription.
 - 📥 **Download Transcription**: Once the transcription is completed, you can download the text file.
 - ⏸️ **Pause/Resume Functionality**: The app allows you to pause the speech recognition process and resume later.
 
